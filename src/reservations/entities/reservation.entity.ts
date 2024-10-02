@@ -1,5 +1,6 @@
 import { IReservation } from 'src/interfaces/reservation.interface';
-import { BaseEntity, Column, Entity } from 'typeorm';
+import { BaseEntity } from 'src/config/base.entity';
+import { Column, Entity } from 'typeorm';
 
 @Entity({ name: 'reservations' })
 export class ReservationEntity extends BaseEntity implements IReservation {
@@ -7,4 +8,6 @@ export class ReservationEntity extends BaseEntity implements IReservation {
   type: string;
   @Column()
   date: Date;
+  @Column()
+  trainer: string;
 }
