@@ -1,6 +1,6 @@
-import { IUser } from 'src/interfaces/user.interface';
+import { IUser } from '../../interfaces/user.interface';
 import { Column, Entity } from 'typeorm';
-import { BaseEntity } from 'src/config/base.entity';
+import { BaseEntity } from '../../config/base.entity';
 
 @Entity({ name: 'users' })
 export class UserEntity extends BaseEntity implements IUser {
