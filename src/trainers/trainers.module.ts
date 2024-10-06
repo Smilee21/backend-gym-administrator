@@ -3,6 +3,7 @@ import { TrainersService } from './trainers.service';
 import { TrainersController } from './trainers.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Trainer } from './entities/trainer.entity';
+import { TrainingSession } from 'src/training-session/entities/training-session.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Trainer])],

@@ -14,6 +14,6 @@ export class Trainer extends BaseEntity implements ITrainer {
   @Column({ type: 'varchar', length: 255 })
   contactInfo: string;
 
-  @OneToMany(() => TrainingSession, (session) => session.trainerId)
+  @OneToMany(() => TrainingSession, (session) => session.trainer)
   sessions: TrainingSession[];
 }

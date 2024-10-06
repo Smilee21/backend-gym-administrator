@@ -18,8 +18,6 @@ export class TrainersController {
 
   @Post()
   create(@Body() trainer: CreateTrainerDto) {
-    console.log(trainer.contactInfo);
-
     return this.trainersService.create(trainer);
   }
 
@@ -40,6 +38,6 @@ export class TrainersController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.trainersService.remove(+id);
+    return this.trainersService.delete(+id);
   }
 }

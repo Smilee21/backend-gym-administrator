@@ -12,25 +12,30 @@ export class TrainersService {
   ) {}
 
   create(trainer: CreateTrainerDto) {
-    console.log(trainer.name);
-    console.log('HOLA');
     const newTrainer = this.trainerRepository.create(trainer);
     return this.trainerRepository.save(newTrainer);
   }
 
   findAll() {
-    return this.trainerRepository.find();
+    return this.trainerRepository.find({
+      relations: ['sessions'],
+    });
   }
 
   findOne(id: number) {
-    return this.trainerRepository.findBy({ id });
+    return this.trainerRepository.find({
+      where: {
+        id,
+      },
+      relations: ['sessions'],
+    });
   }
 
   update(id: number, updateTrainerDto: UpdateTrainerDto) {
-    return `This action updates a #${id} trainer`;
+    return this.trainerRepository.update({ id }, updateTrainerDto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} trainer`;
+  delete(id: number) {
+    return this.trainerRepository.delete({ id });
   }
 }

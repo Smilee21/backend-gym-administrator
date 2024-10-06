@@ -4,6 +4,7 @@ import {
   Column,
   ManyToOne,
   OneToMany,
+  JoinColumn,
 } from 'typeorm';
 import { Trainer } from '../../trainers/entities/trainer.entity';
 import { Booking } from '../../booking/entities/booking.entity';
@@ -14,8 +15,8 @@ import { DayOfWeek } from '../../types/days.enum';
 @Entity()
 export class TrainingSession extends BaseEntity implements ITrainingSession {
   @ManyToOne(() => Trainer, (trainer) => trainer.sessions)
-  @Column()
-  trainerId: number;
+  @JoinColumn({ name: 'trainer_id' })
+  trainer: Trainer;
 
   @Column({
     type: 'enum',
