@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateTrainingSessionDto } from './dto/create-training-session.dto';
 import { UpdateTrainingSessionDto } from './dto/update-training-session.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -15,14 +19,13 @@ export class TrainingSessionService {
     private trainerRepository: Repository<Trainer>,
   ) {}
 
-  create(trainingSession: CreateTrainingSessionDto) {
-    const newTrainingSession =
-      this.trainingSessionRepository.create(trainingSession);
-    return this.trainingSessionRepository.save(newTrainingSession);
-  }
+  async findAll() {
+    const result = await this.trainingSessionRepository.find({
+      relations: ['trainer'],
+    });
 
-  findAll() {
-    return this.trainingSessionRepository.find({ relations: ['trainer'] });
+    if (!result) throw new NotFoundException('No Data');
+    return result;
   }
 
   findOne(id: number) {
@@ -34,32 +37,43 @@ export class TrainingSessionService {
     });
   }
 
-  update(id: number, updateTrainingSessionDto: UpdateTrainingSessionDto) {
-    return this.trainingSessionRepository.update(
-      { id },
+  async update(id: number, updateTrainingSessionDto: UpdateTrainingSessionDto) {
+    const result = await this.trainingSessionRepository.update(
+      id,
       updateTrainingSessionDto,
     );
+    if (!result) throw new BadRequestException();
+
+    return result;
   }
 
-  delete(id: number) {
-    return this.trainingSessionRepository.delete({ id });
+  async delete(id: number) {
+    const result = await this.trainingSessionRepository.delete({ id });
+
+    if (!result) throw new BadRequestException();
+
+    return result;
   }
 
   async createTrainingSession(
     newTrainingSession: CreateTrainingSessionDto,
   ): Promise<TrainingSession> {
+    let trainingSession;
     const { day, hour, duration, trainerId, spaces } = newTrainingSession;
-
     const trainer = await this.trainerRepository.findOneBy({
       id: trainerId === null || trainerId === undefined ? IsNull() : trainerId,
     });
-    console.log(trainer);
 
     if (!trainer) {
-      throw new Error('Trainer not found');
+      trainingSession = this.trainingSessionRepository.create({
+        day,
+        hour,
+        spaces,
+        duration,
+      });
     }
 
-    const trainingSession = this.trainingSessionRepository.create({
+    trainingSession = this.trainingSessionRepository.create({
       trainer,
       day,
       hour,

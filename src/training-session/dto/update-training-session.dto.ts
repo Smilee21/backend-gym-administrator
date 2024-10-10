@@ -1,11 +1,12 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateTrainingSessionDto } from './create-training-session.dto';
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { Transform } from 'class-transformer';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { Trainer } from 'src/trainers/entities/trainer.entity';
 import { DayOfWeek } from 'src/types/days.enum';
 
 export class UpdateTrainingSessionDto {
   @IsNumber()
   @IsOptional()
+  @Transform(({ value }) => parseInt(value, 10))
   trainerId?: number;
   @IsString()
   @IsOptional()
@@ -15,8 +16,12 @@ export class UpdateTrainingSessionDto {
   hour?: string; // Format: 'HH:MM:SS'
   @IsNumber()
   @IsOptional()
+  @Transform(({ value }) => parseInt(value, 10))
   spaces?: number;
   @IsString()
   @IsOptional()
   duration?: string; // Format: 'HH:MM:SS'
+  @IsNumber()
+  @IsOptional()
+  trainer?: Trainer;
 }
