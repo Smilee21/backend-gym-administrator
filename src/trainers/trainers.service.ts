@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Trainer } from './entities/trainer.entity';
 import { CreateTrainerDto } from './dto/create-trainer.dto';
@@ -11,15 +15,22 @@ export class TrainersService {
     @InjectRepository(Trainer) private trainerRepository: Repository<Trainer>,
   ) {}
 
-  create(trainer: CreateTrainerDto) {
+  async create(trainer: CreateTrainerDto) {
     const newTrainer = this.trainerRepository.create(trainer);
-    return this.trainerRepository.save(newTrainer);
+    const result = this.trainerRepository.save(newTrainer);
+
+    if (!result) throw new BadRequestException();
+
+    return result;
   }
 
-  findAll() {
-    return this.trainerRepository.find({
+  async findAll() {
+    const result = await this.trainerRepository.find({
       relations: ['sessions'],
     });
+    if (!result) throw new NotFoundException();
+
+    return result;
   }
 
   findOne(id: number) {
@@ -31,8 +42,13 @@ export class TrainersService {
     });
   }
 
-  update(id: number, updateTrainerDto: UpdateTrainerDto) {
-    return this.trainerRepository.update({ id }, updateTrainerDto);
+  async update(id: number, updateTrainerDto: UpdateTrainerDto) {
+    const result = await this.trainerRepository.update(
+      { id },
+      updateTrainerDto,
+    );
+    if (!result) throw new BadRequestException();
+    return result;
   }
 
   delete(id: number) {
