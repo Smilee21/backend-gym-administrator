@@ -38,9 +38,32 @@ export class TrainingSessionService {
   }
 
   async update(id: number, updateTrainingSessionDto: UpdateTrainingSessionDto) {
+    let trainingSession;
+    const { day, hour, duration, trainerId, spaces } = updateTrainingSessionDto;
+    const trainer = await this.trainerRepository.findOneBy({
+      id: trainerId === null || trainerId === undefined ? IsNull() : trainerId,
+    });
+
+    if (!trainer) {
+      trainingSession = this.trainingSessionRepository.create({
+        day,
+        hour,
+        spaces,
+        duration,
+      });
+    }
+
+    trainingSession = this.trainingSessionRepository.create({
+      trainer,
+      day,
+      hour,
+      spaces,
+      duration,
+    });
+
     const result = await this.trainingSessionRepository.update(
       id,
-      updateTrainingSessionDto,
+      trainingSession,
     );
     if (!result) throw new BadRequestException();
 
