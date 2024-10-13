@@ -23,8 +23,6 @@ export class RolesGuard implements CanActivate {
 
     // Si no hay roles requeridos, permite el acceso
     if (!requiredRoles || requiredRoles.length === 0) {
-      console.log(!requiredRoles || requiredRoles.length == 0);
-      console.log('si entra aqui');
       return true;
     }
 
