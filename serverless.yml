@@ -1,25 +1,90 @@
 service: f-project
 
-frameworkVersion: "3"
+frameworkVersion: '3'
 
 plugins:
-    - serverless-jetpack
-    - serverless-offline
+  - serverless-jetpack
+  - serverless-offline
 
 provider:
-    name: aws
-    runtime: nodejs20.x
-    region: us-east-1
-    httpApi:
-        cors: true
+  name: aws
+  runtime: nodejs20.x
+  region: us-east-1
+  httpApi:
+    cors: true
+
+custom:
+  userPoolClientId: ${opt:userPoolClientId, 'defaultClientId'}
 
 functions:
-    api:
-        handler: dist/lambda.handler
-        events:
-            - httpApi:
-                  method: any
-                  path: /
-            - httpApi:
-                  method: any
-                  path: /{proxy+}
+  api:
+    handler: dist/lambda.handler
+    events:
+      - httpApi:
+          method: any
+          path: /
+      - httpApi:
+          method: any
+          path: /{proxy+}
+
+resources:
+  Resources:
+    UserPool:
+      Type: AWS::Cognito::UserPool
+      Properties:
+        UserPoolName: user-serverless
+        MfaConfiguration: OFF
+        UsernameAttributes:
+          - email
+        AutoVerifiedAttributes:
+          - email
+        Schema:
+          - Name: email
+            Required: true
+          - Name: phone_number
+            Required: false
+        Policies:
+          PasswordPolicy:
+            MinimumLength: 8
+            RequireUppercase: true
+            RequireLowercase: true
+            RequireNumbers: true
+            RequireSymbols: true
+            TemporaryPasswordValidityDays: 7
+
+    UserPoolClient:
+      Type: AWS::Cognito::UserPoolClient
+      Properties:
+        UserPoolId: !Ref UserPool
+        ClientName: user-serverless-client
+        ExplicitAuthFlows:
+          - ALLOW_USER_PASSWORD_AUTH
+          - ALLOW_REFRESH_TOKEN_AUTH
+          - ALLOW_USER_SRP_AUTH
+
+    IdentityPool:
+      Type: AWS::Cognito::IdentityPool
+      Properties:
+        IdentityPoolName: identity-serverless
+        AllowUnauthenticatedIdentities: false
+        CognitoIdentityProviders:
+          - ProviderName: !Sub cognito-idp.${self:provider.region}.amazonaws.com/${UserPool}
+            ClientId: !Ref UserPoolClient
+
+    AdminGroup:
+      Type: AWS::Cognito::UserPoolGroup
+      Properties:
+        GroupName: Admin
+        UserPoolId: !Ref UserPool
+
+    TrainerGroup:
+      Type: AWS::Cognito::UserPoolGroup
+      Properties:
+        GroupName: Trainer
+        UserPoolId: !Ref UserPool
+
+    ClientGroup:
+      Type: AWS::Cognito::UserPoolGroup
+      Properties:
+        GroupName: Client
+        UserPoolId: !Ref UserPool
