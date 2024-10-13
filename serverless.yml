@@ -19,7 +19,6 @@ custom:
 functions:
   api:
     handler: dist/lambda.handler
-    timeout: 30
     events:
       - httpApi:
           method: any
