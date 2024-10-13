@@ -24,7 +24,7 @@ export class TrainersController {
   create(@Body() trainer: CreateTrainerDto) {
     return this.trainersService.create(trainer);
   }
-  @Roles('Admin')
+  @Roles()
   @Get()
   findAll(): Promise<Trainer[]> {
     return this.trainersService.findAll();
