@@ -1,7 +1,7 @@
 import { Entity, Column, OneToOne } from 'typeorm';
-import { Client } from 'src/client/entities/client.entity';
-import { BaseEntity } from 'src/config/base.entity';
-import { PlanStatus, PlanType } from 'src/types/plan_type.enum';
+import { Client } from '../../client/entities/client.entity';
+import { BaseEntity } from '../../config/base.entity';
+import { PlanStatus, PlanType } from '../../types/plan_type.enum';
 
 @Entity()
 export class Subscriptions extends BaseEntity {
