@@ -9,6 +9,9 @@ export class Client extends BaseEntity implements IClient {
   @Column({ type: 'varchar', length: 255 })
   name: string;
 
+  @Column({ type: 'text' })
+  email: string;
+
   @Column({ type: 'varchar', length: 255 })
   contactInfo: string;
 
