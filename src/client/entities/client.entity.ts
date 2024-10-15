@@ -9,11 +9,14 @@ export class Client extends BaseEntity implements IClient {
   @Column({ type: 'varchar', length: 255 })
   name: string;
 
+  @Column({ type: 'varchar', length: 255 })
+  family_name: string;
+
   @Column({ type: 'text' })
   email: string;
 
   @Column({ type: 'varchar', length: 255 })
-  contactInfo: string;
+  phone: string;
 
   @OneToMany(() => Booking, (booking) => booking.client)
   bookings: Booking[];
