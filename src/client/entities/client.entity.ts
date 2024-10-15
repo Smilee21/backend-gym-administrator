@@ -2,7 +2,7 @@ import { Entity, Column, OneToMany, JoinColumn, OneToOne } from 'typeorm';
 import { Booking } from '../../booking/entities/booking.entity';
 import { BaseEntity } from '../../config/base.entity';
 import { IClient } from '../../interfaces/client.interface';
-import { Subscriptions } from 'src/subscriptions/entities/subscription.entity';
+import { Subscriptions } from 'src/subscriptions/entities/subscriptions.entity';
 
 @Entity()
 export class Client extends BaseEntity implements IClient {
