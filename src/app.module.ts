@@ -10,6 +10,7 @@ import { TrainersModule } from './trainers/trainers.module';
 import { ClientModule } from './client/client.module';
 import { TrainingSessionModule } from './training-session/training-session.module';
 import { BookingModule } from './booking/booking.module';
+import { SubscriptionsModule } from './subscriptions/subscriptions.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -22,6 +23,7 @@ import { BookingModule } from './booking/booking.module';
     ClientModule,
     TrainingSessionModule,
     BookingModule,
+    SubscriptionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
