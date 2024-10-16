@@ -78,6 +78,40 @@ resources:
           - ProviderName: !Sub cognito-idp.${self:provider.region}.amazonaws.com/${UserPool}
             ClientId: !Ref UserPoolClient
 
+    IdentityPoolRoleAuthenticated:
+      Type: AWS::IAM::Role
+      Properties:
+        RoleName: IdentityPoolAuthenticatedRole
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal:
+                Federated: cognito-identity.amazonaws.com
+              Action: sts:AssumeRoleWithWebIdentity
+              Condition:
+                StringEquals:
+                  cognito-identity.amazonaws.com:aud: !Ref IdentityPool
+                'ForAnyValue:StringLike':
+                  cognito-identity.amazonaws.com:amr: authenticated
+        Policies:
+          - PolicyName: CognitoAccess
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - cognito-sync:*
+                    - cognito-identity:*
+                  Resource: '*'
+
+    IdentityPoolRoleAttachment:
+      Type: AWS::Cognito::IdentityPoolRoleAttachment
+      Properties:
+        IdentityPoolId: !Ref IdentityPool
+        Roles:
+          authenticated: !GetAtt IdentityPoolRoleAuthenticated.Arn
+
     AdminGroup:
       Type: AWS::Cognito::UserPoolGroup
       Properties:
