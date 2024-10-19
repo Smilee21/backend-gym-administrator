@@ -1,12 +1,25 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateSubscriptionDto } from './dto/create-subscription.dto';
 import { UpdateSubscriptionDto } from './dto/update-subscription.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Subscriptions } from './entities/subscriptions.entity';
+import { Repository } from 'typeorm';
+import { ClientService } from 'src/client/client.service';
+import { Client } from 'src/client/entities/client.entity';
 
 @Injectable()
 export class SubscriptionsService {
-  create(createSubscriptionDto: CreateSubscriptionDto) {
-    return 'This action adds a new subscription';
-  }
+  constructor(
+    private readonly clientService: ClientService,
+    @InjectRepository(Subscriptions)
+    private subscriptionsRepository: Repository<Subscriptions>,
+  ) {}
+
+  async create(createSubscriptionDto: CreateSubscriptionDto) {}
 
   findAll() {
     return `This action returns all subscriptions`;
