@@ -18,29 +18,27 @@ import { Roles } from '../auth/decorators/roles.decorator';
 export class ClientController {
   constructor(private readonly clientService: ClientService) {}
 
-  @Roles('Client')
+  @Roles('Client', 'Admin')
   @Post('sub')
   create(@Body() createClientWithSubDto: CreateClientWithSubscriptionDto) {
     return this.clientService.create(createClientWithSubDto);
   }
-  @Roles('Client')
+  @Roles('Client', 'Admin')
   @Get()
   findAll() {
     return this.clientService.findAll();
   }
-
-  @Roles('Client')
+  @Roles('Client', 'Admin')
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.clientService.findOne(+id);
   }
-
-  @Roles('Client')
+  @Roles('Client', 'Admin')
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateClientDto: UpdateClientDto) {
     return this.clientService.update(+id, updateClientDto);
   }
-  @Roles('Client')
+  @Roles('Admin')
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.clientService.remove(+id);
