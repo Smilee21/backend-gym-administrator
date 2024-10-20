@@ -12,13 +12,6 @@ provider:
   region: us-east-1
   httpApi:
     cors: true
-  iam:
-    role:
-      statements:
-        - Effect: Allow
-          Action:
-            - cognito-idp:AdminAddUserToGroup
-          Resource: !GetAtt UserPool.Arn
 
 custom:
   userPoolClientId: ${opt:userPoolClientId, 'defaultClientId'}
@@ -33,13 +26,6 @@ functions:
       - httpApi:
           method: any
           path: /{proxy+}
-
-  postConfirmation:
-    handler: dist/postConfirmation.handler
-    events:
-      - cognitoUserPool:
-          pool: user-serverless
-          trigger: PostConfirmation
 
 resources:
   Resources:
@@ -72,38 +58,6 @@ resources:
             RequireNumbers: true
             RequireSymbols: true
             TemporaryPasswordValidityDays: 7
-        LambdaConfig:
-          PostConfirmation: !GetAtt PostConfirmationLambdaFunction.Arn
-
-    PostConfirmationLambdaFunction:
-      Type: AWS::Lambda::Function
-      Properties:
-        Handler: dist/postConfirmation.handler
-        Runtime: nodejs20.x
-        Role: !GetAtt LambdaExecutionRole.Arn
-        Environment:
-          Variables:
-            USER_POOL_ID: !Ref UserPool
-
-    LambdaExecutionRole:
-      Type: AWS::IAM::Role
-      Properties:
-        AssumeRolePolicyDocument:
-          Version: '2012-10-17'
-          Statement:
-            - Effect: Allow
-              Principal:
-                Service: lambda.amazonaws.com
-              Action: sts:AssumeRole
-        Policies:
-          - PolicyName: AddUserToGroupPolicy
-            PolicyDocument:
-              Version: '2012-10-17'
-              Statement:
-                - Effect: Allow
-                  Action:
-                    - cognito-idp:AdminAddUserToGroup
-                  Resource: !GetAtt UserPool.Arn
 
     UserPoolClient:
       Type: AWS::Cognito::UserPoolClient
