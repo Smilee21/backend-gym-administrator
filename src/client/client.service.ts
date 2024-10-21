@@ -27,12 +27,14 @@ export class ClientService {
         relations: ['subscription'],
       });
 
-      if (existingClient.subscription.status === PlanStatus.ACTIVE) {
-        console.log('subscription');
+      if (
+        existingClient &&
+        existingClient.subscription?.status === PlanStatus.ACTIVE
+      ) {
         return { message: 'The user is already subscribed' };
       }
 
-      const newSubscription = this.subscriptionsRepository.create({
+      const newSubscription = await this.subscriptionsRepository.create({
         plan_type: createClientWithSubDto.plan_type,
         status: PlanStatus.ACTIVE,
         start_date: new Date(),
@@ -46,7 +48,6 @@ export class ClientService {
         await this.clientRepository.update(existingClient.id, {
           subscription: { id: subscription.id } as any,
         });
-
         return { id: existingClient.id, subscriptionId: subscription.id };
       }
 
@@ -62,13 +63,14 @@ export class ClientService {
       if (error.code === '23505') {
         throw new BadRequestException('El cliente ya existe');
       }
+
       throw new InternalServerErrorException('Error al crear el cliente');
     }
   }
 
   private calculateEndDate(planType: PlanType): Date {
     const startDate = new Date();
-    let endDate = new Date();
+    const endDate = new Date();
 
     switch (planType) {
       case 'monthly':
@@ -89,8 +91,38 @@ export class ClientService {
     return `This action returns all client`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} client`;
+  async findOne(email: string) {
+    try {
+      const userSub = await this.clientRepository.findOne({
+        where: { email },
+        relations: ['subscription'],
+      });
+
+      return userSub || null;
+    } catch (error) {
+      console.error('Error fetching user:', error);
+      throw new BadRequestException({ message: 'the user not exist' });
+    }
+  }
+
+  async findActiveSubscription(email: string) {
+    try {
+      const userSub = await this.clientRepository.findOne({
+        where: { email },
+        relations: ['subscription'],
+      });
+
+      if (userSub && userSub.subscription?.status === PlanStatus.ACTIVE) {
+        return {
+          message: 'The user is already subscribed',
+          active: true,
+          userSub,
+        };
+      }
+    } catch (error) {
+      console.error('Error fetching user:', error);
+      throw new BadRequestException({ message: 'the user not exist' });
+    }
   }
 
   update(id: number, updateClientDto: UpdateClientDto) {

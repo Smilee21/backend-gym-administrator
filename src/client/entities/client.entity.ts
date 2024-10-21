@@ -12,7 +12,7 @@ export class Client extends BaseEntity implements IClient {
   @Column({ type: 'varchar', length: 255 })
   family_name: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'varchar', length: 255, unique: true })
   email: string;
 
   @Column({ type: 'varchar', length: 255 })

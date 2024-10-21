@@ -10,5 +10,6 @@ import { Trainer } from 'src/trainers/entities/trainer.entity';
   imports: [TypeOrmModule.forFeature([TrainingSession, Trainer])],
   controllers: [TrainingSessionController],
   providers: [TrainingSessionService],
+  exports: [TrainingSessionService],
 })
 export class TrainingSessionModule {}

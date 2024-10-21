@@ -1,17 +1,17 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class Init1728962037282 implements MigrationInterface {
-  name = 'Init1728962037282';
+export class Init1729407905684 implements MigrationInterface {
+  name = 'Init1729407905684';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
-      `DROP INDEX \`IDX_0b3ce0c685312db4a490f6c4dc\` ON \`client\``,
+      `ALTER TABLE \`client\` ADD UNIQUE INDEX \`IDX_6436cc6b79593760b9ef921ef1\` (\`email\`)`,
     );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
-      `CREATE UNIQUE INDEX \`IDX_0b3ce0c685312db4a490f6c4dc\` ON \`client\` (\`subscription_id\`)`,
+      `ALTER TABLE \`client\` DROP INDEX \`IDX_6436cc6b79593760b9ef921ef1\``,
     );
   }
 }

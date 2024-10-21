@@ -11,7 +11,9 @@ describe('TrainingSessionController', () => {
       providers: [TrainingSessionService],
     }).compile();
 
-    controller = module.get<TrainingSessionController>(TrainingSessionController);
+    controller = module.get<TrainingSessionController>(
+      TrainingSessionController,
+    );
   });
 
   it('should be defined', () => {

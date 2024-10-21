@@ -1,7 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { BookingService } from './booking.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { UpdateBookingDto } from './dto/update-booking.dto';
+import { InscribeInSessionDto } from './dto/inscribe-in-session.dto';
 
 @Controller('booking')
 export class BookingController {
@@ -12,9 +22,14 @@ export class BookingController {
     return this.bookingService.create(createBookingDto);
   }
 
-  @Get()
-  findAll() {
-    return this.bookingService.findAll();
+  @Post('inscribe')
+  inscribeUser(@Body() inscribeUser: InscribeInSessionDto) {
+    return this.bookingService.inscribeClientInClass(inscribeUser);
+  }
+
+  @Get('user-class')
+  findAll(@Query('client-email') clientEmail: string) {
+    return this.bookingService.findUserClasses(clientEmail);
   }
 
   @Get(':id')

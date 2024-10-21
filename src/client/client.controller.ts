@@ -29,10 +29,17 @@ export class ClientController {
     return this.clientService.findAll();
   }
   @Roles('Client', 'Admin')
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.clientService.findOne(+id);
+  @Get(':email')
+  findOne(@Param('email') email: string) {
+    return this.clientService.findOne(email);
   }
+
+  @Roles('Client', 'Admin')
+  @Get('is-active/:email')
+  findBySubscription(@Param('email') email: string) {
+    return this.clientService.findActiveSubscription(email);
+  }
+
   @Roles('Client', 'Admin')
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateClientDto: UpdateClientDto) {

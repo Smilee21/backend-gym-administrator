@@ -19,5 +19,5 @@ export class CreateClientWithSubscriptionDto {
   phone: string;
 
   @IsNotEmpty()
-  plan_type: PlanType; // Cambiar según sea necesario
+  plan_type: PlanType;
 }
