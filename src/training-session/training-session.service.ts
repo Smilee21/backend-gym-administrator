@@ -39,7 +39,8 @@ export class TrainingSessionService {
 
   async update(id: number, updateTrainingSessionDto: UpdateTrainingSessionDto) {
     let trainingSession;
-    const { day, hour, duration, trainerId, spaces } = updateTrainingSessionDto;
+    const { day, hour, duration, trainerId, spaces, dateOfClass } =
+      updateTrainingSessionDto;
     const trainer = await this.trainerRepository.findOneBy({
       id: trainerId === null || trainerId === undefined ? IsNull() : trainerId,
     });
@@ -50,6 +51,7 @@ export class TrainingSessionService {
         hour,
         spaces,
         duration,
+        dateOfClass,
       });
     }
 
@@ -59,6 +61,7 @@ export class TrainingSessionService {
       hour,
       spaces,
       duration,
+      dateOfClass,
     });
 
     const result = await this.trainingSessionRepository.update(
@@ -82,7 +85,8 @@ export class TrainingSessionService {
     newTrainingSession: CreateTrainingSessionDto,
   ): Promise<TrainingSession> {
     let trainingSession;
-    const { day, hour, duration, trainerId, spaces } = newTrainingSession;
+    const { day, hour, duration, trainerId, spaces, dateOfClass } =
+      newTrainingSession;
     const trainer = await this.trainerRepository.findOneBy({
       id: trainerId === null || trainerId === undefined ? IsNull() : trainerId,
     });
@@ -93,6 +97,7 @@ export class TrainingSessionService {
         hour,
         spaces,
         duration,
+        dateOfClass,
       });
     }
 
@@ -102,6 +107,7 @@ export class TrainingSessionService {
       hour,
       spaces,
       duration,
+      dateOfClass,
     });
 
     return this.trainingSessionRepository.save(trainingSession);
